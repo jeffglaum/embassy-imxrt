@@ -7,7 +7,7 @@ use defmt::info;
 use embassy_executor::Spawner;
 use embassy_imxrt::uart::{Blocking, Uart, UartRx, UartTx};
 use embassy_time::Timer;
-use {defmt_rtt as _, panic_probe as _};
+use {panic_probe as _};
 
 #[embassy_executor::task]
 async fn usart4_task(mut uart: UartRx<'static, Blocking>) {

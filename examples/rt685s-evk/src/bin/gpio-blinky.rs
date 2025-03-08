@@ -7,6 +7,7 @@ use defmt::info;
 use embassy_executor::Spawner;
 use embassy_imxrt::gpio;
 use embassy_time::Timer;
+use rtos_trace;
 
 #[embassy_executor::main]
 async fn main(_spawner: Spawner) {
@@ -23,6 +24,8 @@ async fn main(_spawner: Spawner) {
     );
 
     loop {
+        // Custom trace marker.
+        rtos_trace::trace::marker(12);
         info!("Toggling LED");
         led.toggle();
         Timer::after_millis(1000).await;

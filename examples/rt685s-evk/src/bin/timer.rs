@@ -4,10 +4,10 @@
 use defmt::info;
 use embassy_executor::Spawner;
 use embassy_imxrt::clocks::ClockConfig;
-use embassy_imxrt::timer::{CaptureChEdge, CaptureTimer, CountingTimer, TriggerInput};
+use embassy_imxrt::timer::{CaptureChEdge, CaptureTimer, CountingTimer};
 use embassy_imxrt::{bind_interrupts, peripherals, timer};
 use embassy_time::Timer as Tmr;
-use {defmt_rtt as _, panic_probe as _};
+use panic_probe as _;
 
 bind_interrupts!(struct Irqs {
     CTIMER0 => timer::CtimerInterruptHandler<peripherals::CTIMER0_COUNT_CHANNEL0>;

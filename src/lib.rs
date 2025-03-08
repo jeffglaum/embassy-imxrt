@@ -62,6 +62,33 @@ pub use embassy_hal_internal::{into_ref, Peripheral, PeripheralRef};
 #[cfg(feature = "rt")]
 pub use crate::pac::NVIC_PRIO_BITS;
 
+use systemview_target::SystemView;
+
+static LOGGER: systemview_target::SystemView = systemview_target::SystemView::new();
+rtos_trace::global_trace! {SystemView}
+
+struct TraceInfo();
+
+impl rtos_trace::RtosTraceApplicationCallbacks for TraceInfo {
+    fn system_description() {}
+    fn sysclock() -> u32 {
+        250000000
+    }
+}
+rtos_trace::global_application_callbacks! {TraceInfo}
+
+// NOTE: defmt-rtt can't be used at the same time as systemview-target.
+//       Stub defmt calls.
+#[inline(never)]
+#[no_mangle]
+unsafe fn _defmt_release() {}
+#[inline(never)]
+#[no_mangle]
+unsafe fn _defmt_write(_bytes: &[u8]) {}
+#[inline(never)]
+#[no_mangle]
+unsafe fn _defmt_acquire() {}
+
 /// Macro to bind interrupts to handlers.
 ///
 /// This defines the right interrupt handlers, and creates a unit struct (like `struct Irqs;`)
@@ -159,6 +186,9 @@ pub fn init(config: config::Config) -> Peripherals {
         gpio::init();
         timer::init();
     }
+
+    // Initialize systemview tracing.
+    LOGGER.init();
 
     peripherals
 }
